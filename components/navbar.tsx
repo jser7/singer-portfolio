@@ -111,7 +111,7 @@ export default function Navbar() {
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="absolute inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-white dark:bg-black" />
         <div className="relative h-full pt-24 pb-6 px-4 flex flex-col">
           <nav className="flex-1 flex flex-col space-y-2">
             <Link
