@@ -4,9 +4,33 @@ import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { X } from "lucide-react"
 
-export default function GigDetailsModal({ gig, onClose }) {
-  const modalRef = useRef(null)
-  const contentRef = useRef(null)
+interface GigDetails {
+  setlist: string[]
+  musicians: string[]
+  notes: string
+}
+
+interface Gig {
+  id: number
+  date: string
+  venue: string
+  location: string
+  description: string
+  image: string
+  highlight: boolean
+  color: string
+  gallery: string[]
+  details: GigDetails
+}
+
+interface GigDetailsModalProps {
+  gig: Gig
+  onClose: () => void
+}
+
+export default function GigDetailsModal({ gig, onClose }: GigDetailsModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Prevent body scrolling when modal is open
@@ -25,7 +49,7 @@ export default function GigDetailsModal({ gig, onClose }) {
     )
 
     // Add event listener for escape key
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose()
     }
 

@@ -11,8 +11,21 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
+interface UpcomingGig {
+  id: number
+  date: string
+  time: string
+  venue: string
+  location: string
+  description: string
+  ticketLink: string
+  image: string
+  color: string
+  featured: boolean
+}
+
 // Remove the genre property from each gig object
-const upcomingGigs = [
+const upcomingGigs: UpcomingGig[] = [
   {
     id: 1,
     date: "25th June, 2025",
@@ -51,135 +64,101 @@ const upcomingGigs = [
   }
 ]
 
-// 2. Remove the activeFilter state and related functions
 export default function UpcomingGigsPage() {
-  const containerRef = useRef(null)
-  const headerRef = useRef(null)
-  const featuredRef = useRef(null)
-  const listRef = useRef(null)
-  const gigRefs = useRef([])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+  const gigsSectionRef = useRef<HTMLElement>(null)
+  const gigRefs = useRef<(HTMLElement | null)[]>([])
 
   // Initialize refs array
   useEffect(() => {
     gigRefs.current = gigRefs.current.slice(0, upcomingGigs.length)
   }, [])
 
-  // Set up animations
+  const addToRefs = (el: HTMLElement | null, index: number) => {
+    if (el) {
+      gigRefs.current[index] = el
+    }
+  }
+
+  // Set up animations after component mounts
   useEffect(() => {
     if (typeof window === "undefined" || !containerRef.current) return
 
-    // Create a GSAP context for clean up
     const ctx = gsap.context(() => {
-      // Initial animations
-      const mainTl = gsap.timeline()
+      if (!heroRef.current || !titleRef.current || !subtitleRef.current || !scrollIndicatorRef.current) return
 
-      // Header animation with text split effect
-      mainTl.fromTo(
-        headerRef.current.querySelectorAll(".animate-text"),
-        {
-          y: 100,
-          opacity: 0,
-          rotationX: 30,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          rotationX: 0,
-          stagger: 0.1,
-          duration: 1.2,
-          ease: "power3.out",
-        },
+      // Hero section animations
+      const tl = gsap.timeline()
+
+      const titleSpan = titleRef.current.querySelector("span")
+      if (titleSpan) {
+        tl.fromTo(
+          titleSpan,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+        )
+      }
+
+      tl.fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+        "-=0.4",
       )
+        .fromTo(
+          scrollIndicatorRef.current,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.2",
+        )
 
-      // Featured gig animation
-      mainTl.fromTo(
-        featuredRef.current,
-        {
-          clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)",
-          opacity: 0,
-        },
-        {
-          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-          opacity: 1,
-          duration: 1.5,
-          ease: "power3.inOut",
-        },
-        "-=0.8",
-      )
+      // Filter out null values from gigRefs
+      const validGigRefs = gigRefs.current.filter((ref): ref is HTMLElement => ref !== null)
 
-      // Animate the featured gig content
-      mainTl.fromTo(
-        featuredRef.current.querySelectorAll(".featured-content"),
-        { x: -50, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, ease: "power2.out" },
-        "-=1",
-      )
+      // Animate gig cards when they come into view
+      if (validGigRefs.length > 0) {
+        validGigRefs.forEach((card, index) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top bottom-=100",
+            onEnter: () => {
+              gsap.to(card, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.6,
+                ease: "power2.out",
+                delay: index * 0.1,
+              })
+            },
+          })
 
-      // Animate the list section
-      mainTl.fromTo(
-        listRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power2.out" },
-        "-=0.5",
-      )
+          // Add hover animations
+          card.addEventListener("mouseenter", () => {
+            gsap.to(card, {
+              y: -10,
+              scale: 1.02,
+              duration: 0.3,
+              ease: "power2.out",
+            })
+          })
 
-      // Animate each gig card with staggered effect
-      mainTl.fromTo(
-        gigRefs.current,
-        {
-          scale: 0.9,
-          y: 50,
-          opacity: 0,
-          rotationY: 5,
-        },
-        {
-          scale: 1,
-          y: 0,
-          opacity: 1,
-          rotationY: 0,
-          stagger: 0.15,
-          duration: 0.8,
-          ease: "back.out(1.7)",
-        },
-        "-=0.7",
-      )
-
-      // Create hover animations for gig cards
-      gigRefs.current.forEach((card) => {
-        if (!card) return
-
-        const hoverTl = gsap.timeline({ paused: true })
-
-        hoverTl.to(card, {
-          y: -10,
-          scale: 1.03,
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.3)",
-          duration: 0.4,
-          ease: "power2.out",
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              duration: 0.3,
+              ease: "power2.out",
+            })
+          })
         })
+      }
 
-        // Add event listeners for hover
-        card.addEventListener("mouseenter", () => hoverTl.play())
-        card.addEventListener("mouseleave", () => hoverTl.reverse())
-      })
-
-      // Create floating animation for decorative elements
-      const decorElements = document.querySelectorAll(".floating-element")
-      decorElements.forEach((el, index) => {
-        gsap.to(el, {
-          y: index % 2 === 0 ? "20px" : "-20px",
-          x: index % 3 === 0 ? "10px" : "-10px",
-          rotation: index % 2 === 0 ? 5 : -5,
-          duration: 3 + index,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: index * 0.2,
-        })
-      })
-
-      // Animate background particles
-      const particles = document.querySelectorAll(".particle")
+      // Animate particles
+      const particles = document.querySelectorAll<HTMLElement>(".particle")
       particles.forEach((particle, index) => {
         const delay = index * 0.04
         const duration = 10 + Math.random() * 30
@@ -204,7 +183,7 @@ export default function UpcomingGigsPage() {
     }, containerRef)
 
     return () => {
-      ctx.revert() // cleanup
+      ctx.revert()
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
   }, [])
@@ -242,7 +221,7 @@ export default function UpcomingGigsPage() {
       </div>
 
       {/* Header section */}
-      <section ref={headerRef} className="relative z-10 pt-32 pb-16 px-4 overflow-hidden">
+      <section ref={heroRef} className="relative z-10 pt-32 pb-16 px-4 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="floating-element absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-purple-500/10 blur-3xl" />
@@ -251,12 +230,12 @@ export default function UpcomingGigsPage() {
 
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-8">
-            <h1 className="animate-text text-5xl md:text-7xl font-bold mb-4 leading-tight">
+            <h1 ref={titleRef} className="animate-text text-5xl md:text-7xl font-bold mb-4 leading-tight">
               <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animated-gradient">
                 UPCOMING SHOWS
               </span>
             </h1>
-            <p className="animate-text text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p ref={subtitleRef} className="animate-text text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Don't miss your chance to experience Jessie's electrifying live performances. Secure your tickets now for
               these upcoming events.
             </p>
@@ -266,7 +245,7 @@ export default function UpcomingGigsPage() {
 
       {/* Featured gig section */}
       {featuredGig && (
-        <section ref={featuredRef} className="relative z-10 py-12 px-4 overflow-hidden">
+        <section ref={gigsSectionRef} className="relative z-10 py-12 px-4 overflow-hidden">
           <div className="container mx-auto max-w-6xl">
             <div className="relative rounded-3xl overflow-hidden">
               {/* Background image */}
@@ -320,7 +299,7 @@ export default function UpcomingGigsPage() {
       )}
 
       {/* Gigs list section */}
-      <section ref={listRef} className="relative z-10 py-16 px-4">
+      <section ref={gigsSectionRef} className="relative z-10 py-16 px-4">
         <div className="container mx-auto max-w-6xl">
           {/* Remove filter bar */}
 
@@ -329,7 +308,7 @@ export default function UpcomingGigsPage() {
             {regularGigs.map((gig, index) => (
               <div
                 key={gig.id}
-                ref={(el) => (gigRefs.current[index] = el)}
+                ref={(el) => addToRefs(el as HTMLElement, index)}
                 className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl rounded-xl overflow-hidden transform transition-all duration-500"
               >
                 {/* Card content */}

@@ -13,8 +13,27 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
 }
 
+interface GigDetails {
+  setlist: string[]
+  musicians: string[]
+  notes: string
+}
+
+interface Gig {
+  id: number
+  date: string
+  venue: string
+  location: string
+  description: string
+  image: string
+  highlight: boolean
+  color: string
+  gallery: string[]
+  details: GigDetails
+}
+
 // Past gigs data
-const pastGigs = [
+const pastGigs: Gig[] = [
   {
     id: 1,
     date: "December 15, 2023",
@@ -81,18 +100,17 @@ const pastGigs = [
 ]
 
 export default function GigsPage() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [selectedGig, setSelectedGig] = useState(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+  const gigsSectionRef = useRef<HTMLElement>(null)
+  const gigRefs = useRef<(HTMLElement | null)[]>([])
+
+  const [selectedGig, setSelectedGig] = useState<Gig | null>(null)
   const [showGallery, setShowGallery] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-
-  const containerRef = useRef(null)
-  const heroRef = useRef(null)
-  const titleRef = useRef(null)
-  const subtitleRef = useRef(null)
-  const scrollIndicatorRef = useRef(null)
-  const gigsSectionRef = useRef(null)
-  const gigRefs = useRef([])
 
   // Initialize refs array
   useEffect(() => {
@@ -101,150 +119,75 @@ export default function GigsPage() {
 
   // Set up animations after component mounts
   useEffect(() => {
-    // Wait for DOM to be fully ready
-    const timer = setTimeout(() => {
-      setIsLoaded(true)
-      initAnimations()
-    }, 100)
+    if (typeof window === "undefined" || !containerRef.current) return
 
-    return () => {
-      clearTimeout(timer)
-      // Clean up all GSAP animations
-      const contexts = gsap.context && gsap.context()
-      if (contexts) {
-        contexts.forEach((context) => context.kill())
-      }
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
-
-  // Initialize all animations
-  const initAnimations = () => {
-    if (!containerRef.current) return
-
-    // Create a GSAP context for clean up
     const ctx = gsap.context(() => {
+      if (!heroRef.current || !titleRef.current || !subtitleRef.current || !scrollIndicatorRef.current) return
+
       // Hero section animations
-      const heroTl = gsap.timeline()
+      const tl = gsap.timeline()
 
-      heroTl.fromTo(heroRef.current, { opacity: 0 }, { opacity: 1, duration: 1, ease: "power2.out" })
-
-      heroTl.fromTo(
-        titleRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" },
-        "-=0.5",
+      tl.fromTo(
+        titleRef.current.querySelector("span"),
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
       )
-
-      heroTl.fromTo(
-        subtitleRef.current,
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-        "-=0.8",
-      )
-
-      heroTl.fromTo(
-        scrollIndicatorRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" },
-        "-=0.5",
-      )
-
-      // Animate the gigs section
-      gsap.fromTo(
-        gigsSectionRef.current,
-        { opacity: 0, y: 100 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          delay: 0.5,
-        },
-      )
-
-      // Animate each gig card with staggered effect
-      gsap.fromTo(
-        gigRefs.current,
-        {
-          opacity: 0,
-          y: 100,
-          scale: 0.9,
-          rotationX: 10,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotationX: 0,
-          stagger: 0.15,
-          duration: 1,
-          ease: "power3.out",
-          delay: 0.8,
-        },
-      )
-
-      // Add scroll-triggered animations for each gig card
-      gigRefs.current.forEach((card, index) => {
-        // Create hover animation for each card
-        const hoverTl = gsap.timeline({ paused: true })
-
-        hoverTl.to(card, {
-          scale: 1.03,
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.3)",
-          duration: 0.4,
-          ease: "power2.out",
-        })
-
-        hoverTl.to(
-          card.querySelector(".gig-image"),
-          {
-            scale: 1.1,
-            duration: 0.4,
-            ease: "power2.out",
-          },
-          0,
+        .fromTo(
+          subtitleRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+          "-=0.4",
+        )
+        .fromTo(
+          scrollIndicatorRef.current,
+          { opacity: 0, y: -20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+          "-=0.2",
         )
 
-        // Add event listeners for hover
-        card.addEventListener("mouseenter", () => hoverTl.play())
-        card.addEventListener("mouseleave", () => hoverTl.reverse())
+      // Filter out null values from gigRefs
+      const validGigRefs = gigRefs.current.filter((ref): ref is HTMLElement => ref !== null)
 
-        // Create scroll-triggered animations
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top bottom-=100",
-          end: "bottom center",
-          toggleClass: "card-active",
-          once: true,
-          onEnter: () => {
+      // Animate gig cards when they come into view
+      if (validGigRefs.length > 0) {
+        validGigRefs.forEach((card, index) => {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top bottom-=100",
+            onEnter: () => {
+              gsap.to(card, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.6,
+                ease: "power2.out",
+                delay: index * 0.1,
+              })
+            },
+          })
+
+          // Add hover animations
+          card.addEventListener("mouseenter", () => {
             gsap.to(card, {
-              scale: 1,
-              opacity: 1,
-              duration: 0.6,
+              y: -10,
+              scale: 1.02,
+              duration: 0.3,
               ease: "power2.out",
             })
-          },
-        })
-      })
+          })
 
-      // Create floating animation for decorative elements
-      const decorElements = document.querySelectorAll(".floating-element")
-      decorElements.forEach((el, index) => {
-        gsap.to(el, {
-          y: index % 2 === 0 ? "20px" : "-20px",
-          x: index % 3 === 0 ? "10px" : "-10px",
-          rotation: index % 2 === 0 ? 5 : -5,
-          duration: 3 + index,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: index * 0.2,
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              duration: 0.3,
+              ease: "power2.out",
+            })
+          })
         })
-      })
+      }
 
-      // Animate background particles
-      const particles = document.querySelectorAll(".particle")
+      // Animate particles
+      const particles = document.querySelectorAll<HTMLElement>(".particle")
       particles.forEach((particle, index) => {
         const delay = index * 0.04
         const duration = 10 + Math.random() * 30
@@ -268,17 +211,26 @@ export default function GigsPage() {
       })
     }, containerRef)
 
-    return () => ctx.revert() // cleanup
+    return () => {
+      ctx.revert()
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    }
+  }, [])
+
+  const addToRefs = (el: HTMLElement | null, index: number) => {
+    if (el) {
+      gigRefs.current[index] = el
+    }
   }
 
   // Handle opening the gallery modal
-  const openGallery = (gig) => {
+  const openGallery = (gig: Gig) => {
     setSelectedGig(gig)
     setShowGallery(true)
   }
 
   // Handle opening the details modal
-  const openDetails = (gig) => {
+  const openDetails = (gig: Gig) => {
     setSelectedGig(gig)
     setShowDetails(true)
   }
@@ -362,7 +314,7 @@ export default function GigsPage() {
             {pastGigs.map((gig, index) => (
               <div
                 key={gig.id}
-                ref={(el) => (gigRefs.current[index] = el)}
+                ref={(el) => addToRefs(el, index)}
                 className="gig-card group relative bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl rounded-2xl overflow-hidden transform transition-all duration-700 card-inactive"
                 style={{
                   transformStyle: "preserve-3d",
@@ -439,11 +391,11 @@ export default function GigsPage() {
         </div>
       </section>
 
-      {/* Gallery Modal
+      {/* Gallery Modal */}
       {showGallery && selectedGig && <GigGalleryModal gig={selectedGig} onClose={() => setShowGallery(false)} />}
 
       {/* Details Modal */}
-      {/* {showDetails && selectedGig && <GigDetailsModal gig={selectedGig} onClose={() => setShowDetails(false)} />} */} */}
+      {showDetails && selectedGig && <GigDetailsModal gig={selectedGig} onClose={() => setShowDetails(false)} />}
     </div>
   )
 }

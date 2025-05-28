@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import Navbar from "../navbar"
+import Navbar from "../components/navbar"
 import HeroSection from "../sections/hero-section"
 import BookingSection from "../sections/booking-section"
 import RecordingSection from "../sections/recording-section"
@@ -16,9 +16,9 @@ if (typeof window !== "undefined") {
 }
 
 export default function Home() {
-  const textRef = useRef(null)
-  const navbarRef = useRef(null)
-  const contentRef = useRef(null)
+  const textRef = useRef<HTMLDivElement>(null)
+  const navbarRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const [animationComplete, setAnimationComplete] = useState(false)
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export default function Home() {
     if (!animationComplete) return
 
     // Set up scroll animations for each section
-    const sections = document.querySelectorAll(".scroll-section")
+    const sections = document.querySelectorAll<HTMLElement>(".scroll-section")
 
     sections.forEach((section, i) => {
       // Create a timeline for each section
@@ -115,22 +115,25 @@ export default function Home() {
         },
       })
 
-      // Animate the section content
-      tl.fromTo(
-        section.querySelector(".section-content"),
-        {
-          y: 100,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-        },
-      )
+      const sectionContent = section.querySelector<HTMLElement>(".section-content")
+      if (sectionContent) {
+        // Animate the section content
+        tl.fromTo(
+          sectionContent,
+          {
+            y: 100,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+          },
+        )
+      }
 
       // Add floating animation to decorative elements
-      const decorativeElements = section.querySelectorAll(".floating-element")
+      const decorativeElements = section.querySelectorAll<HTMLElement>(".floating-element")
       decorativeElements.forEach((element) => {
         gsap.to(element, {
           y: "20px",
@@ -143,7 +146,8 @@ export default function Home() {
     })
 
     // Add parallax effect to background sections
-    gsap.utils.toArray(".parallax-bg").forEach((bg: any) => {
+    const parallaxBgs = gsap.utils.toArray<HTMLElement>(".parallax-bg")
+    parallaxBgs.forEach((bg) => {
       gsap.to(bg, {
         yPercent: 30,
         ease: "none",
@@ -162,34 +166,28 @@ export default function Home() {
   }, [animationComplete])
 
   return (
-    <main className="min-h-screen flex flex-col bg-black overflow-x-hidden relative">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white overflow-hidden">
+      <Navbar />
       <BackgroundImage />
 
-      {/* Initial centered text that zooms in */}
-      {!animationComplete && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-          <h1
-            ref={textRef}
-            className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500"
-          >
-            Jessie Hope
-          </h1>
-        </div>
-      )}
-
-      {/* Navbar that appears after animation */}
-      <div ref={navbarRef} className="opacity-0">
-        <Navbar />
+      {/* Initial text animation */}
+      <div
+        ref={textRef}
+        className="fixed inset-0 flex items-center justify-center text-5xl md:text-7xl font-bold text-center z-50"
+      >
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500">
+          Welcome to Jessie's World
+        </span>
       </div>
 
-      {/* Content sections that appear after the initial animation */}
-      <div ref={contentRef} className="opacity-0 w-full">
+      {/* Main content */}
+      <div ref={contentRef} className="opacity-0">
         <HeroSection />
         <BookingSection />
         <RecordingSection />
         <PerformanceSection />
       </div>
-    </main>
+    </div>
   )
 }
 
