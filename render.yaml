@@ -10,4 +10,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_TELEMETRY_DISABLED
-        value: "1" 
+        value: "1"
+    healthCheckPath: /
+    autoDeploy: true 
