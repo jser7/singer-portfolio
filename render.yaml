@@ -2,10 +2,10 @@ services:
   - type: web
     name: jessie-hope-portfolio
     env: node
+    runtime: node
     buildCommand: npm install && npm run build
     startCommand: npm start
+    nodeVersion: 20.11.1
     envVars:
       - key: NODE_ENV
-        value: production
-      - key: NODE_VERSION
-        value: 20.11.1 
+        value: production 
