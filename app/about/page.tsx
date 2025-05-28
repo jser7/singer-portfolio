@@ -51,7 +51,7 @@ const bioTimeline = [
 const testimonials = [
   {
     quote:
-      "As Jessie’s best friend I have had the privilege to watch up close just how extraordinary she is, I am so proud of everything she has managed to achieve all on her own and can’t wait to see her future successes as well. Her ability to connect with and produce music is incredible. She is definitely someone to watch as I imagine this girl is going to go so far",
+      "As Jessie's best friend I have had the privilege to watch up close just how extraordinary she is, I am so proud of everything she has managed to achieve all on her own and can't wait to see her future successes as well. Her ability to connect with and produce music is incredible. She is definitely someone to watch as I imagine this girl is going to go so far",
     author: "Tilly Blake"
   },
   {
@@ -69,19 +69,34 @@ const testimonials = [
 export default function AboutPage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0)
 
-  const containerRef = useRef(null)
-  const heroRef = useRef(null)
-  const bioRef = useRef(null)
-  const timelineRef = useRef(null)
-  const timelineItemsRef = useRef([])
-  const testimonialRef = useRef(null)
-  const testimonialItemsRef = useRef([])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const heroRef = useRef<HTMLElement>(null)
+  const bioRef = useRef<HTMLElement>(null)
+  const timelineRef = useRef<HTMLElement>(null)
+  const testimonialRef = useRef<HTMLElement>(null)
+  const testimonialItemsRef = useRef<(HTMLElement | null)[]>([])
+  const timelineItemsRef = useRef<(HTMLElement | null)[]>([])
 
   // Initialize refs arrays
   useEffect(() => {
-    timelineItemsRef.current = timelineItemsRef.current.slice(0, bioTimeline.length)
     testimonialItemsRef.current = testimonialItemsRef.current.slice(0, testimonials.length)
   }, [])
+
+  useEffect(() => {
+    timelineItemsRef.current = timelineItemsRef.current.slice(0, bioTimeline.length)
+  }, [])
+
+  const addTestimonialItemRef = (el: HTMLElement | null, index: number) => {
+    if (el) {
+      testimonialItemsRef.current[index] = el
+    }
+  }
+
+  const addTimelineItemRef = (el: HTMLElement | null, index: number) => {
+    if (el) {
+      timelineItemsRef.current[index] = el
+    }
+  }
 
   // Set up animations
   useEffect(() => {
@@ -89,25 +104,37 @@ export default function AboutPage() {
 
     // Create a GSAP context for clean up
     const ctx = gsap.context(() => {
+      if (!heroRef.current) return
+
       // Only animate elements that are initially visible
       // Hero section animations - only run once
-      gsap.fromTo(
-        heroRef.current.querySelector(".hero-title"),
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-      )
+      const heroTitle = heroRef.current.querySelector<HTMLElement>(".hero-title")
+      const heroSubtitle = heroRef.current.querySelector<HTMLElement>(".hero-subtitle")
+      const heroImage = heroRef.current.querySelector<HTMLElement>(".hero-image")
 
-      gsap.fromTo(
-        heroRef.current.querySelector(".hero-subtitle"),
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.2 },
-      )
+      if (heroTitle) {
+        gsap.fromTo(
+          heroTitle,
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+        )
+      }
 
-      gsap.fromTo(
-        heroRef.current.querySelector(".hero-image"),
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1, ease: "power2.out", delay: 0.3 },
-      )
+      if (heroSubtitle) {
+        gsap.fromTo(
+          heroSubtitle,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.2 },
+        )
+      }
+
+      if (heroImage) {
+        gsap.fromTo(
+          heroImage,
+          { scale: 0.9, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 1, ease: "power2.out", delay: 0.3 },
+        )
+      }
 
       // Set up scroll-triggered animations that only run once when the element comes into view
       const sections = [
@@ -338,13 +365,13 @@ export default function AboutPage() {
               </p>
 
               <p>
-              I’ve been singing as long as I can remember. I started grades I’d like to say in year five I was always told I had a big powerful voice, but having lessons really made me understand singing and how to do it right and how to take care of your voice properly. When I was in year nine I finished my grade 8 singing performance exam and was so happy to hear I got a distinction. combining both of these two elements gives me the freedom to write music 
+              I've been singing as long as I can remember. I started grades I'd like to say in year five I was always told I had a big powerful voice, but having lessons really made me understand singing and how to do it right and how to take care of your voice properly. When I was in year nine I finished my grade 8 singing performance exam and was so happy to hear I got a distinction. combining both of these two elements gives me the freedom to write music 
 I love experimenting with different genres, blending elements of singer-songwriter, ballad, and indie music to create something that feels uniquely mine. There's something incredibly fulfilling about crafting a song from scratch, pouring my heart into the lyrics, and then sharing it with others.
 
               </p>
 
               <p>
-              I’m not really sure what my first gig was. I think that I showed my piano teacher a new piece that I’d come up with and I named it the Nightingale and it was a really simple piano melody, which I got to play at this small festival called festival all of the arts because I got chosen for this competition and my song came second place. Ever since then my writing and composing has blossomed into this amazing passion, which I adore. I now play gigs often. Hey awesome previous gigs that I have played last year. I had the amazing opportunity to play at latitude 2024 which was an unreal experience. I’ve played the other small festivals like Stradbrooke music day. And Eye’s festival of the lights. As well as the John Peel center. And many local pubs and restaurants like the cock and pie, the lion's head and many more.
+              I'm not really sure what my first gig was. I think that I showed my piano teacher a new piece that I'd come up with and I named it the Nightingale and it was a really simple piano melody, which I got to play at this small festival called festival all of the arts because I got chosen for this competition and my song came second place. Ever since then my writing and composing has blossomed into this amazing passion, which I adore. I now play gigs often. Hey awesome previous gigs that I have played last year. I had the amazing opportunity to play at latitude 2024 which was an unreal experience. I've played the other small festivals like Stradbrooke music day. And Eye's festival of the lights. As well as the John Peel center. And many local pubs and restaurants like the cock and pie, the lion's head and many more.
               </p>
 
               <p>
@@ -374,9 +401,11 @@ I love experimenting with different genres, blending elements of singer-songwrit
             {/* Timeline items */}
             {bioTimeline.map((item, index) => (
               <div
-                key={index}
-                ref={(el) => (timelineItemsRef.current[index] = el)}
-                className={`relative mb-16 flex ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"} items-center`}
+                key={item.year}
+                ref={(el) => addTimelineItemRef(el as HTMLElement, index)}
+                className={`timeline-item relative flex ${
+                  index % 2 === 0 ? "justify-start" : "justify-end"
+                } mb-8`}
               >
                 {/* Timeline dot */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center z-10">
@@ -423,8 +452,8 @@ I love experimenting with different genres, blending elements of singer-songwrit
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  ref={(el) => (testimonialItemsRef.current[index] = el)}
-                  className={`absolute inset-0 ${index === activeTestimonial ? "block" : "hidden"}`}
+                  ref={(el) => addTestimonialItemRef(el as HTMLElement, index)}
+                  className={`testimonial-item ${index === activeTestimonial ? "block" : "hidden"}`}
                 >
                   <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl p-8 rounded-2xl border border-gray-200 dark:border-gray-800">
                     <div className="flex flex-col md:flex-row gap-6 items-center">
