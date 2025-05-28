@@ -23,7 +23,12 @@ const initialState: ThemeProviderState = {
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("system")
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as Theme) || "system"
+    }
+    return "system"
+  })
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -31,12 +36,12 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-
       root.classList.add(systemTheme)
       return
     }
 
     root.classList.add(theme)
+    localStorage.setItem("theme", theme)
   }, [theme])
 
   // Listen for system preference changes
@@ -57,8 +62,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      setTheme(newTheme)
     },
   }
 

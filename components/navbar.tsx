@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800"
           : "bg-transparent"
@@ -107,11 +107,12 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-white dark:bg-black transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed inset-0 z-40 transition-transform duration-300 ease-in-out ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full pt-24 pb-6 px-4 flex flex-col">
+        <div className="absolute inset-0 bg-white/95 dark:bg-black/95 backdrop-blur-sm" />
+        <div className="relative h-full pt-24 pb-6 px-4 flex flex-col">
           <nav className="flex-1 flex flex-col space-y-2">
             <Link
               href="/"

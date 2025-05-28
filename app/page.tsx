@@ -176,7 +176,7 @@ export default function Home() {
         className="fixed inset-0 flex items-center justify-center text-5xl md:text-7xl font-bold text-center z-50"
       >
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500">
-          Welcome to Jessie's World
+          Jessie Hope
         </span>
       </div>
 
