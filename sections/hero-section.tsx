@@ -5,12 +5,14 @@ import { gsap } from "gsap"
 import Link from "next/link"
 
 export default function HeroSection() {
-  const sectionRef = useRef(null)
-  const headingRef = useRef(null)
-  const textRef = useRef(null)
-  const buttonsRef = useRef(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  const textRef = useRef<HTMLParagraphElement>(null)
+  const buttonsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!sectionRef.current || !headingRef.current || !textRef.current || !buttonsRef.current) return
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -20,7 +22,7 @@ export default function HeroSection() {
       },
     })
 
-    // Animations remain the same
+    // Animations with proper null checks
     gsap.set(headingRef.current, { perspective: 400 })
     gsap.fromTo(
       headingRef.current,
@@ -34,8 +36,10 @@ export default function HeroSection() {
       { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "power3.out" }
     )
 
+    // Safely access children with type assertion
+    const buttonElements = Array.from(buttonsRef.current.children)
     gsap.fromTo(
-      buttonsRef.current.children,
+      buttonElements,
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 0.8, stagger: 0.2, delay: 1, ease: "back.out(1.7)" }
     )

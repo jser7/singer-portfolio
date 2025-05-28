@@ -9,13 +9,13 @@ import { usePathname } from "next/navigation"
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const menuRef = useRef(null)
-  const menuButtonRef = useRef(null)
-  const menuItemsRef = useRef([])
-  const menuBackgroundRef = useRef(null)
-  const topLineRef = useRef(null)
-  const middleLineRef = useRef(null)
-  const bottomLineRef = useRef(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const menuItemsRef = useRef<(HTMLAnchorElement | null)[]>([])
+  const menuBackgroundRef = useRef<HTMLDivElement>(null)
+  const topLineRef = useRef<HTMLSpanElement>(null)
+  const middleLineRef = useRef<HTMLSpanElement>(null)
+  const bottomLineRef = useRef<HTMLSpanElement>(null)
   const pathname = usePathname()
 
   // Initialize menu items refs
@@ -106,7 +106,7 @@ export default function Navbar() {
   }, [isMobileMenuOpen])
 
   // Handle smooth scrolling to sections on home page
-  const scrollToSection = (sectionIndex) => {
+  const scrollToSection = (sectionIndex: number) => {
     setIsMobileMenuOpen(false)
 
     // If we're on the home page, scroll to the section
@@ -115,6 +115,12 @@ export default function Navbar() {
       if (sections[sectionIndex]) {
         sections[sectionIndex].scrollIntoView({ behavior: "smooth" })
       }
+    }
+  }
+
+  const addToMenuItemsRef = (el: HTMLAnchorElement | null, index: number) => {
+    if (menuItemsRef.current) {
+      menuItemsRef.current[index] = el
     }
   }
 
@@ -199,33 +205,41 @@ export default function Navbar() {
           <nav className="flex flex-col items-center space-y-6">
             <Link
               href="/"
-              ref={(el) => (menuItemsRef.current[0] = el)}
-              className="text-3xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 transform hover:scale-110"
-              onClick={() => setIsMobileMenuOpen(false)}
+              ref={(el) => addToMenuItemsRef(el, 0)}
+              className={`text-2xl font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors ${
+                pathname === "/" ? "text-purple-600 dark:text-purple-400" : ""
+              }`}
+              onClick={() => scrollToSection(0)}
             >
               Home
             </Link>
             <Link
               href="/about"
-              ref={(el) => (menuItemsRef.current[1] = el)}
-              className="text-3xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 transform hover:scale-110"
-              onClick={() => setIsMobileMenuOpen(false)}
+              ref={(el) => addToMenuItemsRef(el, 1)}
+              className={`text-2xl font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors ${
+                pathname === "/about" ? "text-purple-600 dark:text-purple-400" : ""
+              }`}
+              onClick={() => scrollToSection(1)}
             >
               About
             </Link>
             <Link
               href="/gigs"
-              ref={(el) => (menuItemsRef.current[2] = el)}
-              className="text-3xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 transform hover:scale-110"
-              onClick={() => setIsMobileMenuOpen(false)}
+              ref={(el) => addToMenuItemsRef(el, 2)}
+              className={`text-2xl font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors ${
+                pathname === "/gigs" ? "text-purple-600 dark:text-purple-400" : ""
+              }`}
+              onClick={() => scrollToSection(2)}
             >
               Gigs
             </Link>
             <Link
               href="/contact"
-              ref={(el) => (menuItemsRef.current[3] = el)}
-              className="text-3xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 transform hover:scale-110"
-              onClick={() => setIsMobileMenuOpen(false)}
+              ref={(el) => addToMenuItemsRef(el, 3)}
+              className={`text-2xl font-medium text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors ${
+                pathname === "/contact" ? "text-purple-600 dark:text-purple-400" : ""
+              }`}
+              onClick={() => scrollToSection(3)}
             >
               Contact
             </Link>
