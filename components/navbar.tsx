@@ -38,10 +38,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[101] transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-[101] transition-all duration-300 backdrop-opacity-100 ${
         isScrolled
           ? "bg-white/80 dark:bg-black/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800"
-          : "bg-transparent"
+          : "bg-transparent backdrop-opacity-100"
       }`}
     >
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
