@@ -121,7 +121,7 @@ export default function ContactPage() {
 
           {/* Contact cards */}
           <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Email card */}
+            {/* Email card
             <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl p-6 rounded-xl text-center transform-gpu hover:shadow-glow transition-all duration-300">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
                 <Mail className="w-6 h-6 text-white" />
@@ -130,7 +130,7 @@ export default function ContactPage() {
               <a href="mailto:jessie@example.com" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
                 jessie@example.com
               </a>
-            </div>
+            </div> */}
 
             {/* Phone card */}
             <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl p-6 rounded-xl text-center transform-gpu hover:shadow-glow transition-all duration-300">
@@ -139,7 +139,7 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg font-semibold mb-2">Phone</h3>
               <a href="tel:+441234567890" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
-                +44 123 456 7890
+                07902182164
               </a>
             </div>
 
@@ -150,14 +150,8 @@ export default function ContactPage() {
               </div>
               <h3 className="text-lg font-semibold mb-2">Social Media</h3>
               <div className="flex justify-center space-x-4">
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
+                <a href="instagram.com/jessie_hope.music" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
                   <Instagram className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-purple-500 dark:hover:text-purple-400">
-                  <Twitter className="w-5 h-5" />
                 </a>
               </div>
             </div>

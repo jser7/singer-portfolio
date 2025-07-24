@@ -39,7 +39,7 @@ const pastGigs: Gig[] = [
     date: "December 15, 2023",
     venue: "Stradbroke music day",
     location: "Stradbroke",
-    description: "jessie fill this in (1 sentence)",
+    description: "Jessie performed at the local music event Stradbroke Music Day",
     image: "/images/IMG_8602.jpeg",
     highlight: true,
     color: "from-purple-500 to-pink-500",
@@ -52,7 +52,7 @@ const pastGigs: Gig[] = [
       setlist: ["Midnight Dreams", "Lost in the City", "Remember When", "Echoes", "Final Goodbye"],
       musicians: ["Jessie Hope - Vocals", "Alex Chen - Guitar", "Maria Rodriguez - Bass", "Tom Wilson - Drums"],
       notes:
-        "jessie fill this in (2 sentences)",
+        ".",
     },
   },
   {
@@ -60,7 +60,7 @@ const pastGigs: Gig[] = [
     date: "Unknown",
     venue: "Latitude",
     location: "Suffolk",
-    description: "description (jessie fill this in)",
+    description: "Jessie performed at Latitude Festival!",
     image: "/images/IMG_8605.jpeg",
     highlight: false,
     color: "from-pink-500 to-red-500",
