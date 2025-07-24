@@ -106,63 +106,59 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <>
-          {/* Backdrop */}
-          <div className="md:hidden fixed inset-0 bg-white dark:bg-black z-[100]" />
-          {/* Content */}
-          <div className="md:hidden fixed inset-0 z-[100] overflow-y-auto">
-            <div className="min-h-screen flex flex-col">
-              <div className="flex-1 pt-24 pb-6 px-4">
-                <nav className="flex flex-col space-y-2">
-                  <Link
-                    href="/"
-                    className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      pathname === "/" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href="/about"
-                    className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      pathname === "/about" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/gigs"
-                    className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      pathname === "/gigs" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Gigs
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      pathname === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Contact
-                  </Link>
-                </nav>
-              </div>
-              <div className="px-4 py-6 border-t border-gray-200 dark:border-gray-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">Theme</span>
-                  <ThemeToggle />
-                </div>
-              </div>
+      <div
+        className={`md:hidden fixed inset-0 z-[100] transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="absolute inset-0 bg-white/100 dark:bg-black/100" />
+        <div className="relative h-full pt-24 pb-6 px-4 flex flex-col">
+          <nav className="flex-1 flex flex-col space-y-2">
+            <Link
+              href="/"
+              className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                pathname === "/" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                pathname === "/about" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              href="/gigs"
+              className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                pathname === "/gigs" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Gigs
+            </Link>
+            <Link
+              href="/contact"
+              className={`text-lg py-4 px-4 rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                pathname === "/contact" ? "bg-gray-100 dark:bg-gray-800 font-semibold" : ""
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contact
+            </Link>
+          </nav>
+          <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-800">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500 dark:text-gray-400">Theme</span>
+              <ThemeToggle />
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </header>
   )
 }

@@ -403,9 +403,8 @@ I love experimenting with different genres, blending elements of singer-songwrit
               <div
                 key={item.year}
                 ref={(el) => addTimelineItemRef(el as HTMLElement, index)}
-                className={`timeline-item relative flex ${
-                  index % 2 === 0 ? "justify-start" : "justify-end"
-                } mb-8`}
+                className={`timeline-item relative flex justify-start
+                 mb-8`}
               >
                 {/* Timeline dot */}
                 <div className="absolute left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center z-10">
@@ -413,7 +412,7 @@ I love experimenting with different genres, blending elements of singer-songwrit
                 </div>
 
                 {/* Content */}
-                <div className={`w-5/12 ${index % 2 === 0 ? "pr-12 text-right" : "pl-12 text-left"}`}>
+                <div className={`w-5/12 pl-12 text-left"`}>
                   <div className="mb-2">
                     <span
                       className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r ${item.color} text-white`}

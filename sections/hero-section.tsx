@@ -69,9 +69,11 @@ export default function HeroSection() {
           performance is a journey through emotion and melody.
         </p>
         <div ref={buttonsRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-medium hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-glow w-full sm:w-auto">
-            Listen Now
-          </button>
+          <Link 
+          href="/gigs"
+          className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-medium hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-glow w-full sm:w-auto">
+            Past Gigs
+          </Link>
           <Link
             href="/upcoming-gigs"
             className="px-8 py-3 bg-transparent border border-white/30 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 backdrop-blur-sm w-full sm:w-auto text-center"

@@ -29,7 +29,7 @@ const upcomingGigs: UpcomingGig[] = [
   {
     id: 1,
     date: "25th June, 2025",
-    time: "X:XX PM",
+    time: "1:00 PM",
     venue: "Royal Norfolk Show",
     location: "Norfolk",
     description: "Jessie's performing at the Royal Norfolk Show!",
@@ -50,18 +50,6 @@ const upcomingGigs: UpcomingGig[] = [
     color: "from-blue-500 to-purple-500",
     featured: false,
   },
-  {
-    id: 3,
-    date: "September 12th, 2024",
-    time: "X:XX PM",
-    venue: "B2",
-    location: "Miami, FL",
-    description: "Jessie's performing at the B2!",
-    ticketLink: "#",
-    image: "/placeholder.svg?height=400&width=600",
-    color: "from-orange-500 to-red-500",
-    featured: true,
-  }
 ]
 
 export default function UpcomingGigsPage() {
