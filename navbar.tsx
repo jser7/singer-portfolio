@@ -198,7 +198,7 @@ export default function Navbar() {
       >
         <div
           ref={menuBackgroundRef}
-          className="absolute inset-0 bg-gradient-to-b from-white/95 to-purple-100/95 dark:from-black/95 dark:to-purple-900/95 backdrop-blur-lg"
+          className="absolute inset-0 bg-white dark:bg-black"
         ></div>
 
         <div className="relative h-full flex flex-col justify-center items-center p-8">
